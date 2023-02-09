@@ -15,7 +15,14 @@ for (let i = 0; i < 14; i++) {
   makeRow();
 }
 
-let tableArray = Array.from(table.children);
+//create game board from table for snake to navigate
+let gameBoard = [];
+for (let i = 0; i < 14; i++) {
+  gameBoard.push([]);
+  for (let j = 0; j < 30; j++) {
+    gameBoard[i].push(table.rows[i].cells[j]);
+  }
+}
 
 //create a snake
 let snake = {
@@ -30,6 +37,13 @@ function createSnake() {
   }
   let snakeHead = snake[snake.length - 1];
 }
+// grow snake
+function growSnake() {
+  if (snakeHead[0] === food.x && snakeHead[1] === food.y) {
+    snake.unshift(snake[0]);
+    createFood();
+  }
+}
 
 // create food
 let food = {
@@ -42,41 +56,73 @@ function createFood() {
   food.y = Math.floor(Math.random() * 14);
   gameBoard[food.y][food.x].classList.add("food");
 }
-
-// grow snake
-function growSnake() {
-  if (snakeHead[0] === food.x && snakeHead[1] === food.y) {
-    snake.unshift(snake[0]);
-    createFood();
+//check collision if snake runs into boundary of the baord or own body
+function checkCollision() {
+  if (
+    snakeHead[0] < 0 ||
+    snakeHead[0] > 29 ||
+    snakeHead[1] < 0 ||
+    snakeHead[1] > 13
+  ) {
+    gameOver = true;
+  }
+  for (let i = 0; i < snake.length - 1; i++) {
+    if (snakeHead[0] === snake[i][0] && snakeHead[1] === snake[i][1]) {
+      gameOver = true;
+    }
   }
 }
 
-let state;
+//move snake
+let inputDirection = { x: 1, y: 0 };
+let lastInputDirection = { x: 0, y: 0 };
 
-function buildInitialState() {}
-
-// render
-function renderState() {}
-
-// maybe a dozen or so helper functions for tiny pieces of the interface
-
-// listeners
-function onBoardClick() {
-  // update state, maybe with another dozen or so helper functions...
-
-  renderState(); // show the user the new state
-}
-
-// add to above
-function tick() {
-  // this is an incremental change that happens to the state every time you update...
-
-  renderState();
-}
-
-setInterval(tick, 1000 / 30); // as close to 30 frames per second as possible
-
-// now you might have things like
-document.addEventListener("keydown", function (event) {
-  // here you might read which key was pressed and update the state accordingly
+document.addEventListener("keydown", (event) => {
+  switch (event.key) {
+    case "Up":
+      if (lastInputDirection.y !== 0) break;
+      inputDirection = { x: 0, y: -1 };
+      break;
+    case "Down":
+      if (lastInputDirection.y !== 0) break;
+      inputDirection = { x: 0, y: 1 };
+      break;
+    case "Left":
+      if (lastInputDirection.x !== 0) break;
+      inputDirection = { x: -1, y: 0 };
+      break;
+    case "Right":
+      if (lastInputDirection.x !== 0) break;
+      inputDirection = { x: 1, y: 0 };
+      break;
+  }
 });
+
+//move snake
+function moveSnake() {
+  let snakeHead = snake[snake.length - 1];
+  let newHead = [
+    snakeHead[0] + inputDirection.x,
+    snakeHead[1] + inputDirection.y,
+  ];
+  snake.push(newHead);
+  snake.shift();
+  gameBoard[snakeHead[1]][snakeHead[0]].classList.remove("snake");
+  gameBoard[newHead[1]][newHead[0]].classList.add("snake");
+}
+
+//start game
+function startGame() {
+  createSnake();
+  createFood();
+  let timer = setInterval(function () {
+    moveSnake();
+    growSnake();
+    checkCollision();
+    if (gameOver) {
+      clearInterval(timer);
+    }
+  }, 100);
+}
+
+startButton.addEventListener("click", startGame);
