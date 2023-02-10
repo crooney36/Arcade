@@ -1,8 +1,8 @@
 // Initialize variables for the game
 let gameOver = false;
 let startButton = document.getElementById("startButton");
-let scoreText = document.getElementById("score");
-let highScoreText = document.getElementById("highScore");
+let scoreText = document.getElementById("scoreID");
+let highScoreText = document.getElementById("highScoreID");
 const snakeColor = "forestgreen";
 const foodColor = "red";
 let score = 0;
@@ -23,7 +23,7 @@ for (let i = 0; i < 14; i++) {
   makeRow();
 }
 
-// Create game board array from table for snake to navigate
+// Create game board array from table for snake to navigate (unfortunately o(n^2) complexity)
 let gameBoard = [];
 for (let i = 0; i < 14; i++) {
   gameBoard.push([]);
@@ -37,6 +37,7 @@ let snake = {
   head: [0, 0],
   body: [],
   tail: [],
+  snakeColor: "forestgreen",
 };
 
 // Create snake array
@@ -52,6 +53,7 @@ function growSnake() {
     snake.unshift(snake[0]);
     createFood();
     score += 1;
+    scoreText.innterText = score;
   }
 }
 
@@ -59,6 +61,7 @@ function growSnake() {
 let food = {
   x: 0,
   y: 0,
+  foodColor: "red",
 };
 
 // Create food on random coordinates on the game board
@@ -79,8 +82,8 @@ function checkCollision() {
     gameOver = true;
     if (score > highScore) {
       highScore = score;
+      highScoreText.innerText = highScore;
     }
-    highScoreText.innerHTML = `High Score: ${highScore}`;
   }
   // Check if snake head is on the same coordinates as snake body
   for (let i = 0; i < snake.length - 1; i++) {
@@ -88,8 +91,8 @@ function checkCollision() {
       gameOver = true;
       if (score > highScore) {
         highScore = score;
+        highScoreText.innerText = highScore;
       }
-      highScoreText.innerHTML = `High Score: ${highScore}`;
     }
   }
 }
