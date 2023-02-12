@@ -47,7 +47,7 @@ function createSnake() {
   }
 }
 
-// Grow snake when snake head is on food coordinates
+// Grow snake when snake head is on food coordinates and increment score
 function growSnake() {
   if (snake.body[0][0] === food.x && snake.body[0][1] === food.y) {
     snake.body.unshift([food.x, food.y]);
@@ -69,22 +69,18 @@ document.addEventListener("keydown", (e) => {
     case "ArrowUp":
       if (lastInputDirection.y !== 0) break;
       inputDirection = { x: 0, y: -1 };
-      console.log("up");
       break;
     case "ArrowDown":
       if (lastInputDirection.y !== 0) break;
       inputDirection = { x: 0, y: 1 };
-      console.log("down");
       break;
     case "ArrowLeft":
       if (lastInputDirection.x !== 0) break;
       inputDirection = { x: -1, y: 0 };
-      console.log("left");
       break;
     case "ArrowRight":
       if (lastInputDirection.x !== 0) break;
       inputDirection = { x: 1, y: 0 };
-      console.log("right");
       break;
   }
 });
@@ -121,29 +117,29 @@ function checkCollision() {
     }
     gameOver = true;
   }
-  // Check if snake head is on the same coordinates as snake body
-  // if (
-  //   snake.body[0][0] === snake.body[1][0] &&
-  //   snake.body[0][1] === snake.body[1][1]
-  // ) {
-  //   if (score > highScore) {
-  //     highScore = score;
-  //     highScoreText.innerText = highScore;
-  //   }
-  //   gameOver = true;
-  // }
-  // for (let i = 0; i < snake.length - 1; i++) {
-  //   if (
-  //     snakeHead[0] === snake.body[i][0] &&
-  //     snakeHead[1] === snake.body[i][1]
-  //   ) {
-  //     if (score > highScore) {
-  //       highScore = score;
-  //       highScoreText.innerText = highScore;
-  //     }
-  //     gameOver = true;
-  //   }
-  // }
+  // Check if snake head is on the same coordinates as snake body (not properly working)
+  if (
+    snake.body[0][0] === snake.body[1][0] &&
+    snake.body[0][1] === snake.body[1][1]
+  ) {
+    if (score > highScore) {
+      highScore = score;
+      highScoreText.innerText = highScore;
+    }
+    gameOver = true;
+  }
+  for (let i = 0; i < snake.length - 1; i++) {
+    if (
+      snakeHead[0] === snake.body[i][0] &&
+      snakeHead[1] === snake.body[i][1]
+    ) {
+      if (score > highScore) {
+        highScore = score;
+        highScoreText.innerText = highScore;
+      }
+      gameOver = true;
+    }
+  }
 }
 
 // Render snake and food on the game board
@@ -212,5 +208,3 @@ function startGame() {
 
 // Add event listener to start button
 startButton.addEventListener("click", startGame);
-
-console.log(gameBoard);
