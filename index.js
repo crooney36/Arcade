@@ -117,29 +117,30 @@ function checkCollision() {
     }
     gameOver = true;
   }
-  // Check if snake head is on the same coordinates as snake body (not properly working)
-  if (
-    snake.body[0][0] === snake.body[1][0] &&
-    snake.body[0][1] === snake.body[1][1]
-  ) {
-    if (score > highScore) {
-      highScore = score;
-      highScoreText.innerText = highScore;
-    }
-    gameOver = true;
-  }
-  for (let i = 0; i < snake.length - 1; i++) {
-    if (
-      snakeHead[0] === snake.body[i][0] &&
-      snakeHead[1] === snake.body[i][1]
-    ) {
-      if (score > highScore) {
-        highScore = score;
-        highScoreText.innerText = highScore;
-      }
-      gameOver = true;
-    }
-  }
+  // *** not working properly ***
+  // Check if snake head is on the same coordinates as snake body
+  // if (
+  //   snake.body[0][0] === snake.body[1][0] &&
+  //   snake.body[0][1] === snake.body[1][1]
+  // ) {
+  //   if (score > highScore) {
+  //     highScore = score;
+  //     highScoreText.innerText = highScore;
+  //   }
+  //   gameOver = true;
+  // }
+  // for (let i = 0; i < snake.length - 1; i++) {
+  //   if (
+  //     snakeHead[0] === snake.body[i][0] &&
+  //     snakeHead[1] === snake.body[i][1]
+  //   ) {
+  //     if (score > highScore) {
+  //       highScore = score;
+  //       highScoreText.innerText = highScore;
+  //     }
+  //     gameOver = true;
+  //   }
+  // }
 }
 
 // Render snake and food on the game board
